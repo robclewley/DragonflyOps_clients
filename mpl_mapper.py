@@ -52,12 +52,14 @@ class GClient(cb.Client):
         seen = set()
         visited = set()
         q = [(self.graph.keys()[0], (0,0))]
+#        print(self.graph[self.graph.keys()[0]])
 
         while len(q) > 0:
             unit_name, (x,y) = q.pop(0)
             try:
                 exit_data = self.graph[unit_name]
             except:
+                # no graph available for this location yet
                 continue
             else:
                 visited.add(unit_name)
@@ -67,7 +69,7 @@ class GClient(cb.Client):
                     col = 'r'
                 else:
                     col = 'k'
-                ax.plot(x, y, col+'o', markersize = 9)
+                ax.plot(x, y, col+'o', markersize=9)
                 if unit_highlight == unit_name:
                     ax.plot(x, y, 'go', markersize=5)
                 if self.loc_markers[unit_name]:
@@ -79,6 +81,8 @@ class GClient(cb.Client):
                 else:
                     q.append((u_name, (x+dx, y+dy)))
                     ax.plot( (x, x+dx), (y, y+dy), 'k-', lw=0.1 )
+
+        assert len(visited) == len(self.mapdata)
         plt.draw()
         plt.show()
 
@@ -94,6 +98,7 @@ def run(c, res):
             res = c.tx('!M'+response.upper())
             pp.pprint(res)
             sys.stdout.flush()
+            c.graph_it(res['unit'])
         elif response.upper() == 'X':
             # toggle X marker at location
             c.loc_markers[res['unit']] = not c.loc_markers[res['unit']]
@@ -111,7 +116,7 @@ if __name__ == '__main__':
     #curses.initscr()
     c = GClient()
     c.connect()
-    res = c.tx('!?')
+    res = c.tx('!S') # must scan to ensure the door name data is stored in graph
     pp.pprint(res)
     c.visit(res)
     c.graph_it(res['unit'])
