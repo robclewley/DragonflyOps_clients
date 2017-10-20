@@ -18,3 +18,7 @@ in a new room location. Use the underlying "!M<direction>" commands to avoid thi
  - All regular console game commands are available too.
  - Command "x" marks the current location on the map with a check mark and "r" marks it red. These are toggles,
 so repeating the command at the location will remove the marking. Use these to keep note of special locations.
+
+## Bot tool: random_walker.py
+This is a very early and incomplete prototype of a bot that crawls the map. It is not yet able to work with doors. You could adapt this code to hand off door actions to the user or
+set up the command pattern to automate it. But you'll have to be smart about what to do for doors requiring authentication! Has the bot found the right keycode yet?
