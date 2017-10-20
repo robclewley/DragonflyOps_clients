@@ -98,7 +98,6 @@ def run(c, res):
             res = c.tx('!M'+response.upper())
             pp.pprint(res)
             sys.stdout.flush()
-            c.graph_it(res['unit'])
         elif response.upper() == 'X':
             # toggle X marker at location
             c.loc_markers[res['unit']] = not c.loc_markers[res['unit']]
