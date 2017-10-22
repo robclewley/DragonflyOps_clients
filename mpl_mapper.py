@@ -90,7 +90,7 @@ class GClient(cb.Client):
 
 def run(c, res):
     while True:
-        print("Use 'x' and 'r' local commands to toggle marks (cross or red color) at current map location\n\n")
+        print("Use 'x' and 'r' local commands to toggle marks (cross or red color) at current map location\n")
         #print("Direction? ", end='')
         #key = pad.getch()
         #key = getch()
@@ -120,6 +120,9 @@ if __name__ == '__main__':
     except:
         print("No drone to activate? Did you deploy?")
     else:
+        print(" ***** All movement commands 'n', 's','e', 'w' to unvisited locations will")
+        print("                automatically be followed by a scan")
+
         res = c.tx('!S') # must scan to ensure the door name data is stored in graph
         pp.pprint(res)
         c.visit(res)
