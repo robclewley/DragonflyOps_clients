@@ -90,6 +90,7 @@ class GClient(cb.Client):
 
 def run(c, res):
     while True:
+        print("Use 'x' and 'r' local commands to toggle marks (cross or red color) at current map location\n\n")
         #print("Direction? ", end='')
         #key = pad.getch()
         #key = getch()
@@ -114,12 +115,16 @@ def run(c, res):
 if __name__ == '__main__':
     #curses.initscr()
     c = GClient()
-    c.connect()
-    res = c.tx('!S') # must scan to ensure the door name data is stored in graph
-    pp.pprint(res)
-    c.visit(res)
-    c.graph_it(res['unit'])
-    #pad = curses.newpad(200,200)
-    #pad.timeout(0)
-    run(c, res)
+    try:
+        c.connect()
+    except:
+        print("No drone to activate? Did you deploy?")
+    else:
+        res = c.tx('!S') # must scan to ensure the door name data is stored in graph
+        pp.pprint(res)
+        c.visit(res)
+        c.graph_it(res['unit'])
+        #pad = curses.newpad(200,200)
+        #pad.timeout(0)
+        run(c, res)
 
