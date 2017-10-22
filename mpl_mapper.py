@@ -90,11 +90,15 @@ class GClient(cb.Client):
 
 def run(c, res):
     while True:
-        print("Use 'x' and 'r' local commands to toggle marks (cross or red color) at current map location\n")
+        print("Use 'x' and 'r' local commands to toggle markers (cross or red color) at current map location\n")
         #print("Direction? ", end='')
         #key = pad.getch()
         #key = getch()
-        response = raw_input('Direction? (or enter full command or ^D to break) ')
+        try:
+            response = raw_input('Direction? (or enter a full command, or ^D to quit) ')
+        except EOFError:
+            print("Quitting interface")
+            return
         if response.upper() in ('N', 'S', 'E', 'W'):
             res = c.tx('!M'+response.upper())
             pp.pprint(res)
