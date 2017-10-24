@@ -52,7 +52,6 @@ class GClient(cb.Client):
         seen = set()
         visited = set()
         q = [(self.graph.keys()[0], (0,0))]
-#        print(self.graph[self.graph.keys()[0]])
 
         while len(q) > 0:
             unit_name, (x,y) = q.pop(0)
@@ -83,6 +82,8 @@ class GClient(cb.Client):
                     ax.plot( (x, x+dx), (y, y+dy), 'k-', lw=0.1 )
 
         assert len(visited) == len(self.mapdata)
+        ax.set_aspect('equal')
+        plt.autoscale(enable=True, tight=False)
         plt.draw()
         plt.show()
 
@@ -97,7 +98,7 @@ def run(c, res):
         try:
             response = raw_input('Direction? (or enter a full command, or ^D to quit) ')
         except EOFError:
-            print("Quitting interface")
+            print("\n\n***** Quitting interface")
             return
         if response.upper() in ('N', 'S', 'E', 'W'):
             res = c.tx('!M'+response.upper())
