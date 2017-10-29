@@ -54,7 +54,7 @@ class Client(object):
         self.tx('*P')
 
     def tx(self, msg):
-        self.sock.send(msg.encode())
+        self.sock.send((msg+"\n").encode())
         data = self.sock.recv(1024).decode()
         rx = data.split('\n')
         for i, rstr in enumerate(rx):
@@ -64,7 +64,6 @@ class Client(object):
                 pass
             else:
                 rx = r
-                #print(r)
         return copy(rx)
 
 try:
