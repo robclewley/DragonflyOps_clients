@@ -42,6 +42,7 @@ class Client(object):
         self.sectors = set()
         self.mapdata = {} # maps pos to 'unit', 'sector', 'name', 'access level', 'visuals'
         self.graph = {} # pos connecting to pos (symmetric)
+        self.graph_simple = {}
         self.ever_seen = set()
         self.current_loc = None
 
