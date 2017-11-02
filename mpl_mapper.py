@@ -40,9 +40,11 @@ class GClient(cb.Client):
                         return res
                     else:
                         self.visit(res)
+                        self.current_loc = res['unit']
                 else:
                     # reuse old visuals assuming nothing has changed!
                     res = self.mapdata[res['unit']]
+                    self.current_loc = res['unit']
             self.graph_it(res['unit'])
         return res
 

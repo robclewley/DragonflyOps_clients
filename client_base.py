@@ -43,6 +43,7 @@ class Client(object):
         self.mapdata = {} # maps pos to 'unit', 'sector', 'name', 'access level', 'visuals'
         self.graph = {} # pos connecting to pos (symmetric)
         self.ever_seen = set()
+        self.current_loc = None
 
     def connect(self, host="127.0.0.1", port=5555):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
