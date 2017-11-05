@@ -11,7 +11,41 @@ pp = pprint.PrettyPrinter(indent=2)
 
 global fig
 fig = plt.figure(1)
+plt.autoscale(enable=False, tight=False)
 ax = plt.gca()
+
+def sign(x):
+    if x < 0:
+        return -1
+    else:
+        return 1
+
+class Extents(object):
+    """Utility class to auto-calculate extended limits to the growing map.
+    """
+    def __init__(self, extra_fac=0.1):
+        self.x0 = self.x1 = 0
+        self.y0 = self.y1 = 0
+        self.extra_fac = extra_fac
+
+    def __call__(self, x, y):
+        """Update extents from an (x,y) point.
+        """
+        if x < self.x0:
+            self.x0 = x
+        elif x > self.x1:
+            self.x1 = x
+        if y < self.y0:
+            self.y0 = y
+        elif y > self.y1:
+            self.y1 = y
+
+    def get(self):
+        return [(self.x0-self.extra_fac*sign(self.x0),
+                 self.x1+self.extra_fac*sign(self.x1)),
+                (self.y0-self.extra_fac*sign(self.y0),
+                 self.y1+self.extra_fac*sign(self.y1))
+                ]
 
 class GClient(cb.Client):
     """
@@ -50,6 +84,7 @@ class GClient(cb.Client):
 
     def graph_it(self, unit_highlight):
         ax.cla()
+        extents = Extents()
 
         seen = set()
         visited = set()
@@ -70,11 +105,12 @@ class GClient(cb.Client):
                     col = 'r'
                 else:
                     col = 'k'
-                ax.plot(x, y, col+'o', markersize=9)
+                ax.plot(x, y, col+'o', markersize=10)
                 if unit_highlight == unit_name:
-                    ax.plot(x, y, 'go', markersize=5)
+                    ax.plot(x, y, 'go', markersize=8)
                 if self.loc_markers[unit_name]:
-                    ax.plot(x, y, 'yx', markersize=9)
+                    ax.plot(x, y, 'yx', markersize=11)
+                extents(x,y)
             for dirn, (u_name, desc) in exit_data.items():
                 dx, dy = cb.dirn_lookup[dirn]
                 if u_name in visited:
@@ -82,10 +118,12 @@ class GClient(cb.Client):
                 else:
                     q.append((u_name, (x+dx, y+dy)))
                     ax.plot( (x, x+dx), (y, y+dy), 'k-', lw=0.1 )
-
+                    extents(x+dx, y+dy)
         assert len(visited) == len(self.mapdata)
+        x_limits, y_limits = extents.get()
+        ax.set_xlim(x_limits)
+        ax.set_ylim(y_limits)
         ax.set_aspect('equal')
-        plt.autoscale(enable=True, tight=False)
         plt.draw()
         plt.show()
 

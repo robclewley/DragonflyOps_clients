@@ -35,9 +35,11 @@ MOVE_CMD = '!M'
 SCAN_CMD = '!S'
 STATUS_CMD = '!?'
 
-status_keys = ['unit', 'sector', 'name', 'access level', 'visuals', 'achievements']
+status_keys = ['unit', 'sector', 'name', 'visuals', 'achievements']
 
 class Client(object):
+    MAX_PACKET_SIZE = 5120 # assumption, bad for larger files
+
     def __init__(self):
         self.sectors = set()
         self.mapdata = {} # maps pos to 'unit', 'sector', 'name', 'access level', 'visuals'
@@ -51,13 +53,13 @@ class Client(object):
         self.host = host
         self.port = port
         self.sock.connect((host,port))
-        discard_data = self.sock.recv(1024).decode()
+        discard_data = self.sock.recv(self.MAX_PACKET_SIZE).decode()
         # toggle prompt OFF
         self.tx('*P')
 
     def tx(self, msg):
         self.sock.send((msg+"\n").encode())
-        data = self.sock.recv(1024).decode()
+        data = self.sock.recv(self.MAX_PACKET_SIZE).decode()
         rx = data.split('\n')
         for i, rstr in enumerate(rx):
             try:
