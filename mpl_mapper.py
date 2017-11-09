@@ -41,10 +41,10 @@ class Extents(object):
             self.y1 = y
 
     def get(self):
-        return [(self.x0-self.extra_fac*sign(self.x0),
-                 self.x1+self.extra_fac*sign(self.x1)),
-                (self.y0-self.extra_fac*sign(self.y0),
-                 self.y1+self.extra_fac*sign(self.y1))
+        return [(self.x0-self.extra_fac,
+                 self.x1+self.extra_fac),
+                (self.y0-self.extra_fac,
+                 self.y1+self.extra_fac)
                 ]
 
 class GClient(cb.Client):
