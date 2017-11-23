@@ -54,6 +54,7 @@ class GClient(cb.Client):
     def __init__(self):
         self.loc_markers = defaultdict(bool) # default value is False
         self.loc_reds = defaultdict(bool)
+        self.plot_data = {}
         super(GClient, self).__init__()
 
     def visit(self, rx):
@@ -84,11 +85,16 @@ class GClient(cb.Client):
 
     def graph_it(self, unit_highlight):
         ax.cla()
+        ax.axis('off')
+        ax.get_xaxis().set_ticks([])
+        ax.get_yaxis().set_ticks([])
+
         extents = Extents()
 
         seen = set()
         visited = set()
         q = [(self.graph.keys()[0], (0,0))]
+        self.plot_data = pd = {}
 
         while len(q) > 0:
             unit_name, (x,y) = q.pop(0)
@@ -105,19 +111,24 @@ class GClient(cb.Client):
                     col = 'r'
                 else:
                     col = 'k'
-                ax.plot(x, y, col+'o', markersize=10)
+                    pd[unit_name] = ax.plot(x, y, col+'o', markersize=10)[0]
+                    annot = ax.annotate(unit_name, xy=(x+0.15,y+0.15), xytext=(x+0.4,y+0.4), textcoords="offset points",
+                                                    bbox=dict(boxstyle="round", fc="w"),
+                                                    arrowprops=dict(arrowstyle="->"))
+                    annot.set_visible(True)
                 if unit_highlight == unit_name:
                     ax.plot(x, y, 'go', markersize=8)
                 if self.loc_markers[unit_name]:
                     ax.plot(x, y, 'yx', markersize=11)
                 extents(x,y)
+                extents(x+0.4, y+0.4)
             for dirn, (u_name, desc) in exit_data.items():
                 dx, dy = cb.dirn_lookup[dirn]
                 if u_name in visited:
                     continue
                 else:
                     q.append((u_name, (x+dx, y+dy)))
-                    ax.plot( (x, x+dx), (y, y+dy), 'k-', lw=0.1 )
+                    ax.plot( (x, x+dx), (y, y+dy), 'k-', lw=0.2 )
                     extents(x+dx, y+dy)
         assert len(visited) == len(self.mapdata)
         x_limits, y_limits = extents.get()
