@@ -11,6 +11,7 @@ pp = pprint.PrettyPrinter(indent=2)
 
 global fig
 fig = plt.figure(1)
+plt.suptitle("Map of facility", size=14)
 plt.autoscale(enable=False, tight=False)
 ax = plt.gca()
 
