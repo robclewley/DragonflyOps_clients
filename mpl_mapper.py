@@ -2,8 +2,9 @@ from __future__ import print_function #, unicode_literals
 from collections import defaultdict
 from matplotlib import pyplot as plt
 from copy import copy
-import pprint
+#import pprint
 #import curses
+import pyaml
 import sys
 import client_base as cb
 
@@ -154,7 +155,8 @@ def run(c, res):
             return
         if response.upper() in ('N', 'S', 'E', 'W'):
             res = c.tx('!M'+response.upper())
-            pp.pprint(res)
+            #pp.pprint(res)
+            print(pyaml.dump(res))
             sys.stdout.flush()
         elif response.upper() == 'X':
             # toggle X marker at location
@@ -165,7 +167,8 @@ def run(c, res):
             c.graph_it(res['unit'])
         elif response != "":
             # assume a full, regular command
-            pp.pprint(c.tx(response))
+            #pp.pprint(c.tx(response))
+            print(pyaml.dump(c.tx(response)))
             sys.stdout.flush()
 
 
@@ -181,7 +184,8 @@ if __name__ == '__main__':
         print("                automatically be followed by a scan")
 
         res = c.tx('!S') # must scan to ensure the door name data is stored in graph
-        pp.pprint(res)
+        #pp.pprint(res)
+        print(pyaml.dump(res))
         c.visit(res)
         c.graph_it(res['unit'])
         #pad = curses.newpad(200,200)
