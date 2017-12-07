@@ -54,8 +54,6 @@ class Client(object):
         self.port = port
         self.sock.connect((host,port))
         discard_data = self.sock.recv(self.MAX_PACKET_SIZE).decode()
-        # toggle prompt OFF
-        self.tx('*P')
 
     def tx(self, msg):
         self.sock.send((msg+"\n").encode())
