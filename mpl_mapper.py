@@ -8,7 +8,7 @@ import pyaml
 import sys
 import client_base as cb
 
-pp = pprint.PrettyPrinter(indent=2)
+#pp = pprint.PrettyPrinter(indent=2)
 
 global fig
 fig = plt.figure(1)
