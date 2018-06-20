@@ -154,7 +154,7 @@ def run(c, res):
             print("\n\n***** Quitting interface")
             return
         if response.upper() in ('N', 'S', 'E', 'W'):
-            res = c.tx('!M'+response.upper())
+            res = c.tx('move '+response.upper())
             #pp.pprint(res)
             print(pyaml.dump(res))
             sys.stdout.flush()

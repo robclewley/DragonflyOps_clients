@@ -31,9 +31,9 @@ new_pos_cands = {'W': lambda x, y:(x-1, y), 'N': lambda x, y:(x, y+1),
 
 # =========================
 
-MOVE_CMD = '!M'
-SCAN_CMD = '!S'
-STATUS_CMD = '!?'
+MOVE_CMD = 'move ' # trailing space important
+SCAN_CMD = 'scan'
+STATUS_CMD = 'status'
 
 status_keys = ['unit', 'sector', 'name', 'visuals', 'achievements']
 
