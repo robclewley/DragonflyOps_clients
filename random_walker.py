@@ -163,7 +163,7 @@ def test_walk(backtrack_prob=0.9):
         auth_level = rx['access level']
         exits = rx['visuals']['exits']
         graph[rx['unit']] = copy(exits)
-        dirns = exits.keys()
+        dirns = list(exits.keys())
         for d in dirns:
             # if target available, go now!
             if target_name in exits[d][0]:

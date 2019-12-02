@@ -49,6 +49,8 @@ class Client(object):
         self.current_loc = None
 
     def connect(self, host="127.0.0.1", port=5555):
+        """Connect to game server
+        """
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = host
         self.port = port
@@ -56,6 +58,8 @@ class Client(object):
         discard_data = self.sock.recv(self.MAX_PACKET_SIZE).decode()
 
     def tx(self, msg):
+        """Transmit request to server
+        """
         self.sock.send((msg+"\n").encode())
         data = self.sock.recv(self.MAX_PACKET_SIZE).decode()
         rx = data.split('\n')

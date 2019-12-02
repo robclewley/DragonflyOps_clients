@@ -95,7 +95,7 @@ class GClient(cb.Client):
 
         seen = set()
         visited = set()
-        q = [(self.graph.keys()[0], (0,0))]
+        q = [(list(self.graph.keys())[0], (0,0))]
         self.plot_data = pd = {}
 
         while len(q) > 0:
@@ -149,7 +149,7 @@ def run(c, res):
         #key = pad.getch()
         #key = getch()
         try:
-            response = raw_input('Direction? (or enter a full command, or ^D to quit) ')
+            response = input('Direction? (or enter a full command, or ^D to quit) ')
         except EOFError:
             print("\n\n***** Quitting interface")
             return
@@ -183,7 +183,7 @@ if __name__ == '__main__':
         print(" ***** All movement commands 'n', 's','e', 'w' to unvisited locations will")
         print("                automatically be followed by a scan")
 
-        res = c.tx('!S') # must scan to ensure the door name data is stored in graph
+        res = c.tx('scan') # must scan to ensure the door name data is stored in graph
         #pp.pprint(res)
         print(pyaml.dump(res))
         c.visit(res)
