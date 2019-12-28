@@ -72,6 +72,51 @@ class Client(object):
                 rx = r
         return copy(rx)
 
+def run_command(com, **kwargs):
+    """
+    Wrap this in your own functions, especially if you need to use curl
+    """
+    try:
+        use_curl = kwargs.pop('use_curl')
+    except:
+        use_curl = False
+
+    if use_curl:
+        full_com = com.replace(" ", "%20")
+        try:
+            host = kwargs.pop('host')
+        except KeyError:
+            host = "localhost"
+        try:
+            port = kwargs.pop('port')
+        except KeyError:
+            port = 5000
+        res = json.loads(subprocess.check_output(["curl", "{}:{}/{}".format(host,port,full_com)]))
+    else:
+        res = c.tx(com)
+
+    check = -1
+    try:
+        check_ack = kwargs.pop("check_ack")
+    except KeyError:
+        pass
+    else:
+        if check_ack:
+            check = list(res.keys())[0] == "ACK"
+    try:
+        check_err = kwargs.pop("check_err")
+    except KeyError:
+        pass
+    else:
+        if check_err:
+            check = list(res.keys())[0] == "ERROR"
+    if check == -1:
+        return list(res.values())[0]
+    else:
+        return list(res.values())[0], check
+
+    
+# Utility function for your own REPL
 try:
     import msvcrt
 except ImportError:
