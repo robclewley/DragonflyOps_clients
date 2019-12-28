@@ -99,7 +99,7 @@ def run_command(com, **kwargs):
         else:
             port_str = ":"+str(port)
         url = "{}{}/{}".format(host,port_str,full_com)
-        res = subprocess.check_output(["curl", url])
+        res = json.loads(subprocess.check_output(["curl", url]))
         check = 0
     else:
         if c.sock is None:
