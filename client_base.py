@@ -38,7 +38,7 @@ STATUS_CMD = 'status'
 status_keys = ['unit', 'sector', 'name', 'visuals', 'achievements']
 
 class Client(object):
-    MAX_PACKET_SIZE = 5120 # assumption, bad for larger files
+    MAX_PACKET_SIZE = 50000 # assumption, bad for larger files
 
     def __init__(self):
         self.sectors = set()
