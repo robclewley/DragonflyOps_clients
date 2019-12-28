@@ -1,6 +1,7 @@
 from __future__ import print_function
 import json
 import socket
+import subprocess
 from copy import copy
 import random
 
@@ -47,6 +48,7 @@ class Client(object):
         self.graph_simple = {}
         self.ever_seen = set()
         self.current_loc = None
+        self.sock = self.host = self.port = None
 
     def connect(self, host="127.0.0.1", port=5555):
         """Connect to game server
@@ -90,12 +92,29 @@ def run_command(com, **kwargs):
         try:
             port = kwargs.pop('port')
         except KeyError:
+            # use 5000 for localhost HTML port
             port = 5000
-        res = json.loads(subprocess.check_output(["curl", "{}:{}/{}".format(host,port,full_com)]))
+        if port is None:
+            port_str = ""
+        else:
+            port_str = ":"+str(port)
+        url = "{}{}/{}".format(host,port_str,full_com)
+        res = subprocess.check_output(["curl", url])
+        check = 0
     else:
+        if c.sock is None:
+            try:
+                host = kwargs.pop('host')
+            except KeyError:
+                host = "localhost"
+            try:
+                port = kwargs.pop('port')
+            except KeyError:
+                port = 5555
+            c.connect(host, port)
         res = c.tx(com)
-
-    check = -1
+        check = -1
+    
     try:
         check_ack = kwargs.pop("check_ack")
     except KeyError:
@@ -110,11 +129,12 @@ def run_command(com, **kwargs):
     else:
         if check_err:
             check = list(res.keys())[0] == "ERROR"
-    if check == -1:
+    if check == 0:
+        return str(res)
+    elif check == -1:
         return list(res.values())[0]
     else:
         return list(res.values())[0], check
-
     
 # Utility function for your own REPL
 try:
